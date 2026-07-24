@@ -243,6 +243,15 @@
   .evid strong{color:var(--data-ink);}
   .evsrc{font-family:var(--font-mono); font-size:.62rem; letter-spacing:.06em; color:var(--data-ink); white-space:nowrap;}
 
+  /* 10 - time */
+  .team{display:grid; grid-template-columns:repeat(4,1fr); gap:.9rem; margin-top:1.6rem;}
+  @media (max-width:1000px){ .team{grid-template-columns:1fr 1fr;} }
+  @media (max-width:560px){ .team{grid-template-columns:1fr;} }
+  .tmember{border-top:2px solid var(--accent); padding-top:.7rem;}
+  .tmember .tname{font-family:var(--font-display); font-size:1.15rem; color:var(--ink); display:block;}
+  .tmember .trole{font-family:var(--font-mono); font-size:.6rem; letter-spacing:.1em; text-transform:uppercase; color:var(--accent-ink); display:block; margin:.25rem 0 .45rem;}
+  .tmember p{margin:0; font-size:.9rem; color:var(--text); line-height:1.4;}
+
   /* controls & nav (unchanged logic) */
   .controls{position:fixed; top:.9rem; right:1rem; display:flex; gap:.4rem; z-index:20;}
   .ctl{font-family:var(--font-mono); font-size:.72rem; color:var(--muted); background:transparent; border:1px solid var(--line); border-radius:3px; width:2rem; height:2rem; display:grid; place-items:center; cursor:pointer; padding:0; transition:color .2s,border-color .2s;}
@@ -284,7 +293,7 @@
     <div class="body">
       <span class="ghost" style="right:-1vw; top:-2vh; font-size:38vh;">↺</span>
       <h1 class="serif-xl">Educação que se adapta a cada aluno e sabe se o que gerou <span class="mark">se sustenta</span>.</h1>
-      <p class="cover-lead">Plataforma de Educação Adaptativa Generativa para o mercado creator.</p>
+      <p class="cover-lead">Plataforma de Educação Adaptativa Generativa para o mercado digital.</p>
       <div class="cover-names">Guta Britto Alves &nbsp;·&nbsp; Ricardo Neves Junior &nbsp;·&nbsp; <span>Recife/PE</span></div>
     </div>
   </section>
@@ -337,11 +346,11 @@
     </div>
     <div class="body">
       <div class="axis-head">
-        <h2 class="sans-h" style="max-width:18ch;">O adaptive learning resolveu a escola. A creator economy, não.</h2>
+        <h2 class="sans-h" style="max-width:18ch;">O adaptive learning resolveu a escola. O mercado digital, não.</h2>
         <div class="minibar">
           <span class="lbl">Mercado adaptativo sério</span>
           <div class="track"><div class="seg-a" style="width:78%;"></div><div class="seg-b" style="width:22%;"></div></div>
-          <div class="legend"><span class="cap">~78% institucional</span><span class="cap"><span class="em">creator ~22%</span></span></div>
+          <div class="legend"><span class="cap">~78% institucional</span><span class="cap"><span class="em">digital ~22%</span></span></div>
         </div>
       </div>
 
@@ -355,16 +364,16 @@
           <p>Geekie · Aprimora · Squirrel AI</p>
         </div>
         <div class="q-cell">
-          <span class="qt">Creator · Raso</span>
+          <span class="qt">Mercado digital · Raso</span>
           <p>LearnWorlds · Thinkific · Hotmart</p>
         </div>
         <div class="q-cell gap">
-          <span class="qt">Creator · Profundo</span>
+          <span class="qt">Mercado digital · Profundo</span>
           <p><strong>O VÃO</strong><span class="qsub">vazio hoje</span></p>
         </div>
       </div>
 
-      <p class="kick" style="margin-top:1.2rem;"><strong>Raso:</strong> IA para o criador produzir mais rápido. <strong>Profundo:</strong> gerar a experiência por aluno, com avaliação. O profundo existe, mas preso no institucional. No creator, o vão está aberto.</p>
+      <p class="kick" style="margin-top:1.2rem;"><strong>Raso:</strong> IA para produzir conteúdo mais rápido. <strong>Profundo:</strong> gerar a experiência por aluno, com avaliação. O profundo existe, mas preso no institucional. No mercado digital, o vão está aberto.</p>
       <p class="cap" style="margin-top:1.2rem;">Fonte: <span class="em">Grand View Research, Adaptive Learning Market (segmento acadêmico dominante).</span></p>
     </div>
   </section>
@@ -393,7 +402,7 @@
             <path d="M104 112 A 48 48 0 0 1 138 54" fill="none" stroke="var(--accent)" stroke-width="2" marker-end="url(#ah)"/>
           </svg>
           <div class="loop-center">↺</div>
-          <div class="lnode n1"><span class="n">Gera</span><span class="t">O desafio do dia</span><span class="d">A partir do material do criador + do estado atual do aluno.</span></div>
+          <div class="lnode n1"><span class="n">Gera</span><span class="t">O desafio do dia</span><span class="d">A partir do material do curso + do estado atual do aluno.</span></div>
           <div class="lnode n2"><span class="n">Coleta</span><span class="t">O sinal</span><span class="d">Desempenho e percepção viram insumo, não relatório morto.</span></div>
           <div class="lnode n3"><span class="n">Recalibra</span><span class="t">O próximo passo</span><span class="d">Dificuldade e trilha ajustam-se ao indivíduo.</span></div>
         </div>
@@ -440,15 +449,15 @@
   <!-- 6 - 05 Inteligencia para o criador -->
   <section class="slide s-05b">
     <div class="rail">
-      <div class="eyebrow"><span class="tick">05</span> Inteligência para o criador</div>
+      <div class="eyebrow"><span class="tick">05</span> Inteligência de negócio</div>
       <div class="counter"></div>
     </div>
     <div class="body">
-      <h2 class="serif-l">Não só ensina o aluno. Também trabalha para o criador.</h2>
+      <h2 class="serif-l">Não só ensina o aluno. Também trabalha para quem vende o curso.</h2>
       <div class="gains">
         <div class="gain">
           <span class="gn">O que gravar</span>
-          <p>Aponta as aulas que o criador precisa gravar para atender à demanda e às dúvidas reais dos alunos.</p>
+          <p>Aponta as aulas que precisam ser gravadas para atender à demanda e às dúvidas reais dos alunos.</p>
         </div>
         <div class="gain">
           <span class="gn">O que vender</span>
@@ -459,7 +468,7 @@
           <p>Revela o gap dos infoprodutos atuais, onde o catálogo deixa a desejar.</p>
         </div>
       </div>
-      <p class="kick" style="margin-top:1.4rem;">O mesmo sinal que personaliza a experiência do aluno vira <span class="accent">inteligência de negócio para o criador</span>. O fosso de dados virando receita.</p>
+      <p class="kick" style="margin-top:1.4rem;">O mesmo sinal que personaliza a experiência do aluno vira <span class="accent">inteligência de negócio para quem vende o curso</span>. O fosso de dados virando receita.</p>
     </div>
   </section>
 
@@ -550,7 +559,7 @@
   <!-- 8 - Por que o criador paga (business case) -->
   <section class="slide s-06">
     <div class="rail">
-      <div class="eyebrow"><span class="tick">08</span> Por que o criador paga</div>
+      <div class="eyebrow"><span class="tick">08</span> O caso de negócio</div>
       <div class="counter"></div>
     </div>
     <div class="body">
@@ -581,7 +590,7 @@
       <div class="gains">
         <div class="gain">
           <span class="gn">Assinatura · B2C</span>
-          <p>O criador cobra curso ou mensalidade. A personalização eleva retenção e ticket por aluno (o modelo Duolingo).</p>
+          <p>Quem vende cobra curso ou mensalidade. A personalização eleva retenção e ticket por aluno (o modelo Duolingo).</p>
         </div>
         <div class="gain">
           <span class="gn">Pago por resultado · institucional</span>
@@ -597,10 +606,44 @@
     </div>
   </section>
 
-  <!-- 10 - O caminho -->
+  <!-- 10 - O time -->
+  <section class="slide s-team">
+    <div class="rail">
+      <div class="eyebrow"><span class="tick">10</span> O time</div>
+      <div class="counter"></div>
+    </div>
+    <div class="body">
+      <h2 class="serif-l">Quatro papéis. A cadeia digital inteira em uma sala.</h2>
+      <div class="team">
+        <div class="tmember">
+          <span class="tname">Ricardo</span>
+          <span class="trole">Núcleo técnico · IA</span>
+          <p>PhD em Engenharia da Computação (IA), AI engineer e full stack. Constrói o núcleo difícil: ingestão, Student Model e a Camada 4.</p>
+        </div>
+        <div class="tmember">
+          <span class="tname">Guta</span>
+          <span class="trole">Cliente · governança</span>
+          <p>Advogada (LGPD) e infoprodutora. É a cliente-alvo (founder-market fit) e o moat regulatório (PL 2338).</p>
+        </div>
+        <div class="tmember">
+          <span class="tname">Letícia</span>
+          <span class="trole">Conteúdo · vídeo</span>
+          <p>Fotógrafa, filmmaker, edição e aulas. Produz, com qualidade, o conteúdo em vídeo que o sistema aprende.</p>
+        </div>
+        <div class="tmember">
+          <span class="tname">Alan</span>
+          <span class="trole">Aquisição · tráfego</span>
+          <p>Especialista em tráfego pago. Traz os alunos que alimentam o fosso de dados e viabilizam o piloto em escala.</p>
+        </div>
+      </div>
+      <p class="kick" style="margin-top:1.4rem;">Juntos, cobrem a cadeia inteira: <span class="accent">construir, ser o cliente, produzir o conteúdo e trazer os alunos</span>. A única competência que não temos em casa, a ciência da aprendizagem, é exatamente o que a parceria com a CESAR School preenche.</p>
+    </div>
+  </section>
+
+  <!-- 11 - O caminho -->
   <section class="slide s-07">
     <div class="rail">
-      <div class="eyebrow"><span class="tick">10</span> O caminho</div>
+      <div class="eyebrow"><span class="tick">11</span> O caminho</div>
       <div class="counter"></div>
     </div>
     <div class="body">
@@ -639,7 +682,7 @@
     </div>
     <div class="body">
       <span class="ghost" style="right:0; bottom:-6vh; font-size:40vh;">”</span>
-      <p class="quote-q">Na creator economy, toda plataforma coloca IA para o criador produzir mais rápido. Ninguém a colocou para o aluno <em>aprender melhor</em> em loop, porque isso exige encarar o problema que ninguém quer: <em>medir se o que a IA gerou se sustenta.</em></p>
+      <p class="quote-q">No mercado digital de educação, toda plataforma coloca IA para produzir conteúdo mais rápido. Ninguém a colocou para o aluno <em>aprender melhor</em> em loop, porque isso exige encarar o problema que ninguém quer: <em>medir se o que a IA gerou se sustenta.</em></p>
       <p class="quote-attr">Essa é a nossa aposta técnica central, e é o vão que queremos ocupar, daqui, de Recife.</p>
       <p class="quote-sign">Guta Britto Alves · Ricardo Neves Junior</p>
     </div>
