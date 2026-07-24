@@ -1,0 +1,621 @@
+<!doctype html>
+<html lang="pt-BR">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="description" content="Plataforma de Educacao Adaptativa Generativa">
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%3E%3Ctext%20y='.9em'%20font-size='90'%3E%E2%97%90%3C/text%3E%3C/svg%3E">
+<title>Plataforma de Educação Adaptativa — Conversa CESAR</title>
+<style>
+  /* Paleta NEON DARK MODE — dark por padrão (identidade comprometida com o escuro) */
+  :root{
+    --ground:#080808; --panel:#141414; --panel-2:#1C1C21;
+    --ink:#F4F4F6; --text:#D2D2DA; --muted:#9E9EA8;
+    --line:#2A2A30; --line-2:#202026;
+    --accent:#9B5CFF; --accent-ink:#B98BFF; --accent-soft:rgba(155,92,255,.16);
+    --data:#00F5FF; --data-ink:#6FEAF2; --data-soft:rgba(0,245,255,.12);
+    --pop:#AAFF00; --pop-soft:rgba(170,255,0,.16);
+    --font-display:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,serif;
+    --font-sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    --font-mono:"SF Mono","Cascadia Code","JetBrains Mono",Consolas,"Liberation Mono",monospace;
+    --pad-y:clamp(1.4rem,5vh,3rem); --pad-x:clamp(1.3rem,7vw,6rem);
+  }
+  /* Fallback claro (sala clara / impressão) — neon rebaixado para contraste acessível */
+  :root[data-theme="light"]{
+    --ground:#F4F4F5; --panel:#FFFFFF; --panel-2:#ECECEF;
+    --ink:#141414; --text:#34353B; --muted:#86868C;
+    --line:#DCDCE0; --line-2:#E8E8EB;
+    --accent:#6C34D6; --accent-ink:#5A28BC; --accent-soft:rgba(108,52,214,.12);
+    --data:#0A8FA0; --data-ink:#0A7C8B; --data-soft:rgba(10,143,160,.12);
+    --pop:#AAFF00; --pop-soft:rgba(170,255,0,.18);
+  }
+  :root[data-theme="dark"]{
+    --ground:#080808; --panel:#141414; --panel-2:#1C1C21;
+    --ink:#F4F4F6; --text:#D2D2DA; --muted:#9E9EA8;
+    --line:#2A2A30; --line-2:#202026;
+    --accent:#9B5CFF; --accent-ink:#B98BFF; --accent-soft:rgba(155,92,255,.16);
+    --data:#00F5FF; --data-ink:#6FEAF2; --data-soft:rgba(0,245,255,.12);
+    --pop:#AAFF00; --pop-soft:rgba(170,255,0,.16);
+  }
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;height:100%;}
+  body{
+    background:var(--ground); color:var(--text);
+    font-family:var(--font-sans);
+    -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+    overflow:hidden;
+  }
+  /* grain */
+  body::after{
+    content:""; position:fixed; inset:0; z-index:1; pointer-events:none; opacity:.055;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  :root[data-theme="light"] body::after{opacity:.03;}
+
+  .deck{position:fixed; inset:0; z-index:2;}
+  .slide{
+    position:absolute; inset:0;
+    padding:var(--pad-y) var(--pad-x);
+    display:flex; flex-direction:column;
+    opacity:0; visibility:hidden; transform:translateY(10px);
+    transition:opacity .55s ease, transform .55s ease, visibility .55s;
+  }
+  .slide.active{opacity:1; visibility:visible; transform:none;}
+
+  /* rail */
+  .rail{display:flex; align-items:baseline; justify-content:space-between; gap:1rem; flex:0 0 auto; z-index:3;}
+  .eyebrow{font-family:var(--font-mono); font-size:.72rem; letter-spacing:.2em; text-transform:uppercase; color:var(--muted); display:flex; align-items:center; gap:.7rem;}
+  .eyebrow .tick{color:var(--accent); font-weight:700; letter-spacing:0;}
+  .live{font-family:var(--font-mono); font-size:.64rem; letter-spacing:.14em; color:#0A0A0A; background:var(--pop); border:none; border-radius:2px; padding:.18rem .55rem; text-transform:uppercase; white-space:nowrap; font-weight:700; box-shadow:0 0 16px -2px var(--pop);}
+  .counter{font-family:var(--font-mono); font-size:.72rem; letter-spacing:.08em; color:var(--muted); font-variant-numeric:tabular-nums;}
+
+  .body{flex:1 1 auto; display:flex; flex-direction:column; justify-content:center; min-height:0; position:relative; z-index:2;}
+  .foot{flex:0 0 auto; display:flex; justify-content:space-between; align-items:center; gap:1rem; font-family:var(--font-mono); font-size:.66rem; letter-spacing:.1em; color:var(--muted); text-transform:uppercase;}
+
+  /* type primitives */
+  h1,h2{font-family:var(--font-display); color:var(--ink); font-weight:600; margin:0; text-wrap:balance; line-height:1.06;}
+  .serif-xl{font-size:clamp(2.4rem,6.4vw,5.6rem); letter-spacing:-.015em;}
+  .serif-l{font-size:clamp(1.9rem,4vw,3.2rem); letter-spacing:-.01em;}
+  .sans-h{font-family:var(--font-sans); font-weight:800; color:var(--ink); margin:0; line-height:1.02; letter-spacing:-.02em; font-size:clamp(1.55rem,3.1vw,2.6rem); text-wrap:balance;}
+  .lead{font-size:clamp(1rem,1.5vw,1.22rem); color:var(--text); line-height:1.5; max-width:50ch;}
+  .lead strong{color:var(--ink); font-weight:600;}
+  .kick{font-family:var(--font-sans); font-size:clamp(1rem,1.4vw,1.15rem); color:var(--text); line-height:1.5; max-width:52ch;}
+  .kick strong{color:var(--ink);}
+  .accent{color:var(--accent-ink); font-weight:600;}
+  .lbl{font-family:var(--font-mono); font-size:.7rem; letter-spacing:.16em; text-transform:uppercase; color:var(--muted);}
+  .cap{font-family:var(--font-mono); font-size:.68rem; letter-spacing:.04em; color:var(--muted); line-height:1.5;}
+  .cap .em{color:var(--data-ink);}
+
+  .stat{font-family:var(--font-sans); font-weight:800; color:var(--ink); font-variant-numeric:tabular-nums; letter-spacing:-.02em; line-height:.95;}
+
+  /* hand-drawn underline */
+  .mark{position:relative; white-space:nowrap;}
+  .mark::after{content:""; position:absolute; left:-.04em; right:-.04em; bottom:-.16em; height:.34em;
+    background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 12' preserveAspectRatio='none'%3E%3Cpath d='M2 7 C 34 3 62 10 96 6 S 162 3 198 6' stroke='%239B5CFF' stroke-width='3' fill='none' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat;
+    background-size:100% 100%; transform:rotate(-.5deg); pointer-events:none;}
+
+  /* ghost numeral */
+  .ghost{position:absolute; font-family:var(--font-mono); font-weight:700; color:var(--ink); opacity:.05; z-index:0; pointer-events:none; line-height:.8; letter-spacing:-.04em; user-select:none;}
+  :root[data-theme="light"] .ghost{opacity:.035;}
+
+  /* ---- HERO / CLOSE : manifesto ---- */
+  .s-hero .body{justify-content:flex-end;}
+  .s-hero .serif-xl{max-width:20ch;}
+  .cover-lead{font-size:clamp(1.05rem,1.9vw,1.4rem); color:var(--text); margin-top:1.3rem; max-width:40ch;}
+  .cover-names{margin-top:2rem; font-family:var(--font-mono); font-size:.82rem; letter-spacing:.05em; color:var(--ink);}
+  .cover-names span{color:var(--muted);}
+
+  .s-close .body{justify-content:center;}
+  .quote-q{font-family:var(--font-display); font-size:clamp(1.6rem,3.4vw,2.9rem); line-height:1.24; color:var(--ink); text-wrap:balance; max-width:22ch; letter-spacing:-.008em;}
+  .quote-q em{color:var(--accent-ink); font-style:italic;}
+  .quote-attr{margin-top:1.9rem; font-size:clamp(1rem,1.5vw,1.2rem); color:var(--text); max-width:44ch; line-height:1.5;}
+  .quote-sign{margin-top:1.6rem; font-family:var(--font-mono); font-size:.74rem; letter-spacing:.05em; color:var(--muted);}
+
+  /* ---- generic split grid ---- */
+  .split{display:grid; gap:clamp(1.4rem,4vw,3.4rem); align-items:center;}
+  @media (max-width:820px){ .split{grid-template-columns:1fr !important; gap:1.4rem;} .ghost{opacity:.03 !important;} }
+
+  /* 01 problema */
+  .s-01 .split{grid-template-columns:.85fr 1.15fr;}
+  .ctx-item{border-top:1px solid var(--line); padding-top:.7rem; margin-top:.9rem;}
+  .ctx-item .lbl{display:block; margin-bottom:.3rem;}
+  .ctx-item p{margin:0; font-size:1rem; color:var(--text); line-height:1.45;}
+  .ctx-item p strong{color:var(--ink);}
+  .chart-wrap{width:100%;}
+  .chart-wrap svg{width:100%; height:auto; display:block;}
+
+  /* 02 vao / axis */
+  .s-02 .body{gap:clamp(1rem,3vh,2rem); justify-content:center;}
+  .axis-head{display:flex; flex-wrap:wrap; align-items:flex-end; justify-content:space-between; gap:1.2rem;}
+  .minibar{min-width:230px;}
+  .minibar .track{display:flex; height:12px; border-radius:2px; overflow:hidden; border:1px solid var(--line); margin-top:.5rem;}
+  .minibar .seg-a{background:var(--muted); }
+  .minibar .seg-b{background:var(--data);}
+  .minibar .legend{display:flex; justify-content:space-between; margin-top:.35rem;}
+  .axis-viz svg{width:100%; height:auto; display:block;}
+  .axis-ends{display:grid; grid-template-columns:1fr 1.15fr; gap:clamp(1.2rem,4vw,3rem);}
+  @media (max-width:820px){ .axis-ends{grid-template-columns:1fr;} }
+  .end{padding-left:1rem; border-left:2px solid var(--muted);}
+  .end.deep{border-left-color:var(--accent);}
+  .end .lbl{color:var(--muted);}
+  .end.deep .lbl{color:var(--accent-ink);}
+  .end p{margin:.5rem 0 0; font-size:clamp(1rem,1.4vw,1.15rem); line-height:1.45; color:var(--text);}
+  .end p strong{color:var(--ink);}
+  .end.deep p strong{color:var(--accent-ink);}
+
+  /* 03 loop */
+  .s-03 .split{grid-template-columns:.9fr 1.1fr;}
+  .loopwrap{position:relative; width:100%; max-width:520px; margin:0 auto; aspect-ratio:3/2;}
+  .loopwrap svg{position:absolute; inset:0; width:100%; height:100%; z-index:0;}
+  .lnode{position:absolute; transform:translate(-50%,-50%); width:min(38%,190px); text-align:center; z-index:2;}
+  .lnode .n{font-family:var(--font-mono); font-size:.66rem; letter-spacing:.14em; text-transform:uppercase; color:var(--accent-ink);}
+  .lnode .t{display:block; margin-top:.15rem; font-family:var(--font-display); font-size:clamp(1rem,1.5vw,1.25rem); color:var(--ink); line-height:1.1;}
+  .lnode .d{display:block; margin-top:.3rem; font-size:.82rem; color:var(--muted); line-height:1.35;}
+  .lnode.n1{left:50%; top:15%;}
+  .lnode.n2{left:83%; top:82%;}
+  .lnode.n3{left:17%; top:82%;}
+  .loop-center{position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); font-size:1.6rem; color:var(--accent); opacity:.55; z-index:1;}
+  .loopback{margin-top:1.4rem; font-family:var(--font-mono); font-size:.78rem; letter-spacing:.06em; color:var(--muted); line-height:1.5; max-width:34ch;}
+  .loopback b{color:var(--accent-ink);}
+
+  /* 04 diferencial */
+  .s-04 .split{grid-template-columns:.75fr 1.25fr; align-items:center;}
+  .stackviz{width:100%; max-width:300px;}
+  .stackviz svg{width:100%; height:auto; display:block;}
+  .checks{display:grid; gap:.15rem; margin-top:1.2rem;}
+  .check{display:flex; gap:.8rem; align-items:baseline; padding:.6rem 0; border-bottom:1px solid var(--line);}
+  .check .q{color:var(--accent); font-family:var(--font-mono); font-weight:700; font-size:1rem;}
+  .check p{margin:0; font-size:clamp(1.02rem,1.5vw,1.22rem); color:var(--ink); line-height:1.3;}
+
+  /* 05 campo de prova */
+  .s-05 .split{grid-template-columns:1fr 1.2fr;}
+  .who{margin-top:1.1rem;}
+  .who .lbl{color:var(--accent-ink); display:block; margin-bottom:.25rem;}
+  .who + .who{margin-top:1rem; padding-top:1rem; border-top:1px solid var(--line);}
+  .who p{margin:0; font-size:1rem; color:var(--text); line-height:1.45;}
+  .who p strong{color:var(--ink);}
+  .browser{background:var(--panel); border:1px solid var(--line); border-radius:8px; overflow:hidden; box-shadow:0 24px 50px -30px rgba(0,0,0,.4); transform:rotate(.5deg);}
+  .browser .bar{display:flex; align-items:center; gap:.5rem; padding:.6rem .8rem; border-bottom:1px solid var(--line); background:var(--panel-2);}
+  .browser .dot{width:9px; height:9px; border-radius:50%; background:var(--muted); opacity:.5;}
+  .browser .url{margin-left:.6rem; flex:1; font-family:var(--font-mono); font-size:.66rem; color:var(--muted); background:var(--ground); border:1px solid var(--line); border-radius:4px; padding:.2rem .6rem;}
+  .browser .prev{font-family:var(--font-mono); font-size:.6rem; letter-spacing:.1em; text-transform:uppercase; color:var(--accent-ink); background:var(--accent-soft); border-radius:3px; padding:.15rem .45rem;}
+  .screen{padding:1.1rem 1.2rem 1.3rem;}
+  .screen .stitle{font-family:var(--font-sans); font-weight:700; font-size:.95rem; color:var(--ink);}
+  .screen .ssub{font-family:var(--font-mono); font-size:.62rem; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); margin-bottom:.7rem;}
+  .barchart{display:flex; align-items:flex-end; gap:.55rem; height:110px; padding-top:.5rem;}
+  .barchart .b{flex:1; background:var(--muted); opacity:.45; border-radius:2px 2px 0 0;}
+  .barchart .b.hot{background:var(--data); opacity:1;}
+  .tiles{display:flex; gap:.7rem; margin-top:.9rem;}
+  .tile{flex:1; border:1px solid var(--line); border-radius:5px; padding:.55rem .7rem;}
+  .tile .tn{font-family:var(--font-sans); font-weight:800; font-size:1.1rem; color:var(--ink); font-variant-numeric:tabular-nums;}
+  .tile .tl{font-family:var(--font-mono); font-size:.56rem; letter-spacing:.08em; text-transform:uppercase; color:var(--muted);}
+  .tile.hot .tn{color:var(--data-ink);}
+
+  /* 06 timing */
+  .s-06 .split{grid-template-columns:1fr 1.05fr;}
+  .growth{width:100%; max-width:340px;}
+  .growth svg{width:100%; height:auto; display:block;}
+  .why-now .stat{font-size:clamp(2.2rem,4.6vw,3.6rem); margin-bottom:.5rem; display:block;}
+  .why-now p{margin:0; font-size:1.02rem; color:var(--text); line-height:1.5;}
+  .why-now p strong{color:var(--ink);}
+  .why-cesar{margin-top:1.3rem; padding-top:1.2rem; border-top:1px solid var(--line);}
+  .why-cesar .lbl{color:var(--data-ink); display:block; margin-bottom:.4rem;}
+  .why-cesar p{margin:0; font-size:1.02rem; color:var(--text); line-height:1.5;}
+  .why-cesar p strong{color:var(--ink);}
+
+  /* 07 caminho */
+  .s-07 .pathgrid{display:grid; grid-template-columns:1fr auto 1.15fr; gap:clamp(1rem,3vw,2.4rem); align-items:center; margin-top:1.6rem;}
+  @media (max-width:820px){ .s-07 .pathgrid{grid-template-columns:1fr; gap:1rem;} .connector{display:none;} }
+  .routes{display:grid; gap:1rem;}
+  .route{border:1px solid var(--line); border-left:3px solid var(--muted); border-radius:0 5px 5px 0; padding:.9rem 1.1rem; background:var(--panel);}
+  .route .lbl{color:var(--muted); display:block; margin-bottom:.35rem;}
+  .route p{margin:0; font-size:.98rem; color:var(--text); line-height:1.45;}
+  .route p strong{color:var(--ink);}
+  .connector{color:var(--accent); align-self:center;}
+  .connector svg{display:block;}
+  .terminal{border:1.5px solid var(--accent); border-radius:6px; background:var(--accent-soft); padding:1.1rem 1.3rem;}
+  .terminal .lbl{color:var(--accent-ink); display:block; margin-bottom:.5rem;}
+  .terminal p{margin:0; font-size:clamp(1.02rem,1.5vw,1.18rem); color:var(--ink); line-height:1.45;}
+  .terminal em{color:var(--accent-ink); font-style:italic;}
+
+  /* controls & nav (unchanged logic) */
+  .controls{position:fixed; top:.9rem; right:1rem; display:flex; gap:.4rem; z-index:20;}
+  .ctl{font-family:var(--font-mono); font-size:.72rem; color:var(--muted); background:transparent; border:1px solid var(--line); border-radius:3px; width:2rem; height:2rem; display:grid; place-items:center; cursor:pointer; padding:0; transition:color .2s,border-color .2s;}
+  .ctl:hover{color:var(--ink); border-color:var(--muted);}
+  .ctl:focus-visible{outline:2px solid var(--accent); outline-offset:2px;}
+  .nav{position:fixed; bottom:1rem; left:0; right:0; display:flex; align-items:center; justify-content:center; gap:1.1rem; z-index:20;}
+  .navbtn{background:transparent; border:none; color:var(--muted); cursor:pointer; font-size:1.1rem; padding:.3rem .5rem; line-height:1; border-radius:3px;}
+  .navbtn:hover{color:var(--ink);}
+  .navbtn:focus-visible{outline:2px solid var(--accent); outline-offset:2px;}
+  .dots{display:flex; gap:.5rem; align-items:center;}
+  .dot{width:7px; height:7px; border-radius:50%; background:var(--line); border:none; padding:0; cursor:pointer; transition:background .25s, transform .25s;}
+  .dot:hover{background:var(--muted);}
+  .dot.on{background:var(--accent); transform:scale(1.3);}
+  .dot:focus-visible{outline:2px solid var(--accent); outline-offset:2px;}
+  .progress{position:fixed; left:0; bottom:0; height:2px; background:var(--accent); width:0; transition:width .45s ease; z-index:20;}
+  .hint{position:fixed; bottom:1rem; right:1.2rem; font-family:var(--font-mono); font-size:.66rem; letter-spacing:.1em; color:var(--muted); z-index:20;}
+  @media (max-width:820px){.hint{display:none;}}
+
+  @media (prefers-reduced-motion:reduce){
+    .slide{transition:opacity .01s; transform:none;}
+    .progress,.dot{transition:none;}
+    .browser{transform:none;} .mark::after{transform:none;}
+  }
+</style>
+
+<div class="controls">
+  <button class="ctl" id="themeBtn" aria-label="Alternar tema claro/escuro" title="Tema">◐</button>
+  <button class="ctl" id="fsBtn" aria-label="Tela cheia" title="Tela cheia">⤢</button>
+</div>
+
+<main class="deck" id="deck">
+
+  <!-- 1 — Capa (manifesto) -->
+  <section class="slide s-hero active">
+    <div class="rail">
+      <div class="eyebrow"><span class="tick">■</span> Proposta · CESAR × Recife · 2026</div>
+      <div class="counter"></div>
+    </div>
+    <div class="body">
+      <span class="ghost" style="right:-1vw; top:-2vh; font-size:38vh;">↺</span>
+      <h1 class="serif-xl">Educação que se adapta a cada aluno — e que sabe se o que gerou <span class="mark">presta</span>.</h1>
+      <p class="cover-lead">Plataforma de Educação Adaptativa Generativa para o mercado creator.</p>
+      <div class="cover-names">Guta Britto Alves &nbsp;·&nbsp; Ricardo Neves Junior &nbsp;<span>— Recife/PE</span></div>
+    </div>
+  </section>
+
+  <!-- 2 — 01 Problema (Bloom) -->
+  <section class="slide s-01">
+    <div class="rail">
+      <div class="eyebrow"><span class="tick">01</span> O problema</div>
+      <div class="counter"></div>
+    </div>
+    <div class="body">
+      <span class="ghost" style="left:-1vw; bottom:-4vh; font-size:34vh;">01</span>
+      <div class="split">
+        <div>
+          <h2 class="sans-h">Personalização ou escala. Nunca os dois.</h2>
+          <div class="ctx-item">
+            <span class="lbl">Mentoria</span>
+            <p><strong>Personaliza, não escala.</strong> O mentor atua sobre cada caso — mas o gargalo é a agenda dele.</p>
+          </div>
+          <div class="ctx-item">
+            <span class="lbl">Curso online</span>
+            <p><strong>Escala, não personaliza.</strong> Grava uma vez; todo aluno recebe exatamente a mesma coisa.</p>
+          </div>
+        </div>
+        <div class="chart-wrap">
+          <svg viewBox="0 0 520 340" role="img" aria-label="Duas curvas de distribuição: ensino tradicional e tutoria 1:1, deslocadas em dois desvios-padrão">
+            <line x1="30" y1="280" x2="495" y2="280" stroke="var(--line)" stroke-width="1.5"/>
+            <path d="M40 280 C 122.5 280 145 80 190 80 C 235 80 257.5 280 340 280 Z" fill="var(--muted)" fill-opacity=".14" stroke="var(--muted)" stroke-width="2"/>
+            <path d="M170 280 C 252.5 280 275 80 320 80 C 365 80 387.5 280 470 280 Z" fill="var(--data-soft)" stroke="var(--data)" stroke-width="2.5"/>
+            <line x1="190" y1="80" x2="190" y2="280" stroke="var(--muted)" stroke-width="1" stroke-dasharray="3 4"/>
+            <line x1="320" y1="80" x2="320" y2="280" stroke="var(--data)" stroke-width="1" stroke-dasharray="3 4"/>
+            <path d="M190 62 L320 62" stroke="var(--ink)" stroke-width="1.2"/>
+            <path d="M190 58 L190 66 M320 58 L320 66" stroke="var(--ink)" stroke-width="1.2"/>
+            <text x="255" y="52" text-anchor="middle" font-family="var(--font-mono)" font-size="17" font-weight="700" fill="var(--ink)">+2σ</text>
+            <text x="150" y="303" text-anchor="middle" font-family="var(--font-mono)" font-size="12" fill="var(--muted)">Ensino tradicional</text>
+            <text x="368" y="303" text-anchor="middle" font-family="var(--font-mono)" font-size="12" fill="var(--data-ink)">Tutoria 1:1</text>
+          </svg>
+          <p class="kick" style="margin-top:1rem;">É o <span class="accent">2 Sigma Problem</span> de Bloom (1984): tutoria 1:1 rende <strong>+2 desvios-padrão</strong> — e nunca escalou, por custo.</p>
+          <p class="cap" style="margin-top:.7rem;">Fonte — <span class="em">Bloom, B. S. (1984), The 2 Sigma Problem, Educational Researcher.</span></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3 — 02 O vão (eixo raso→profundo) -->
+  <section class="slide s-02">
+    <div class="rail">
+      <div class="eyebrow"><span class="tick">02</span> O vão</div>
+      <div class="counter"></div>
+    </div>
+    <div class="body">
+      <div class="axis-head">
+        <h2 class="sans-h" style="max-width:18ch;">O adaptive learning resolveu a escola. A creator economy, não.</h2>
+        <div class="minibar">
+          <span class="lbl">Mercado adaptativo sério</span>
+          <div class="track"><div class="seg-a" style="width:78%;"></div><div class="seg-b" style="width:22%;"></div></div>
+          <div class="legend"><span class="cap">~78% institucional</span><span class="cap"><span class="em">creator ~22%</span></span></div>
+        </div>
+      </div>
+
+      <div class="axis-viz" aria-hidden="true">
+        <svg viewBox="0 0 1000 130" preserveAspectRatio="xMidYMid meet">
+          <defs>
+            <linearGradient id="spec" x1="0" x2="1" y1="0" y2="0">
+              <stop offset="0" stop-color="var(--muted)"/>
+              <stop offset="1" stop-color="var(--accent)"/>
+            </linearGradient>
+          </defs>
+          <line x1="40" y1="70" x2="960" y2="70" stroke="url(#spec)" stroke-width="2.5"/>
+          <text x="40" y="52" font-family="var(--font-mono)" font-size="15" letter-spacing="2" fill="var(--muted)">RASO</text>
+          <text x="960" y="52" text-anchor="end" font-family="var(--font-mono)" font-size="15" letter-spacing="2" fill="var(--accent-ink)">PROFUNDO</text>
+          <!-- shallow players -->
+          <circle cx="150" cy="70" r="6" fill="var(--muted)"/><text x="150" y="98" text-anchor="middle" font-family="var(--font-mono)" font-size="12" fill="var(--muted)">LearnWorlds</text>
+          <circle cx="270" cy="70" r="6" fill="var(--muted)"/><text x="270" y="98" text-anchor="middle" font-family="var(--font-mono)" font-size="12" fill="var(--muted)">Thinkific</text>
+          <circle cx="390" cy="70" r="6" fill="var(--muted)"/><text x="390" y="98" text-anchor="middle" font-family="var(--font-mono)" font-size="12" fill="var(--muted)">Hotmart Labs</text>
+          <!-- gap -->
+          <rect x="700" y="60" width="240" height="48" rx="4" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.5" stroke-dasharray="6 5"/>
+          <text x="820" y="90" text-anchor="middle" font-family="var(--font-mono)" font-size="14" letter-spacing="2" fill="var(--accent-ink)">O VÃO</text>
+        </svg>
+      </div>
+
+      <div class="axis-ends">
+        <div class="end">
+          <span class="lbl">Raso — o que existe</span>
+          <p>IA para o <strong>criador produzir mais rápido</strong> e caminhos condicionais. LearnWorlds, Thinkific, Hotmart Labs.</p>
+        </div>
+        <div class="end deep">
+          <span class="lbl">Profundo — o que ninguém encara</span>
+          <p>Geração da experiência <strong>por aluno, em loop fechado, com avaliação da qualidade.</strong></p>
+        </div>
+      </div>
+      <p class="cap" style="margin-top:1.2rem;">Fonte — <span class="em">Grand View Research, Adaptive Learning Market (segmento acadêmico dominante).</span></p>
+    </div>
+  </section>
+
+  <!-- 4 — 03 A solução (loop) -->
+  <section class="slide s-03">
+    <div class="rail">
+      <div class="eyebrow"><span class="tick">03</span> A solução</div>
+      <div class="counter"></div>
+    </div>
+    <div class="body">
+      <div class="split">
+        <div>
+          <h2 class="serif-l">Um loop fechado, calibrado a cada dia.</h2>
+          <p class="loopback">↺ &nbsp;<b>Loop diário</b> — pega a escala do curso e injeta a personalização que só a mentoria oferecia.</p>
+        </div>
+        <div class="loopwrap">
+          <svg viewBox="0 0 300 200" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+            <defs>
+              <marker id="ah" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                <path d="M0 0 L10 5 L0 10 z" fill="var(--accent)"/>
+              </marker>
+            </defs>
+            <path d="M162 54 A 48 48 0 0 1 196 112" fill="none" stroke="var(--accent)" stroke-width="2" marker-end="url(#ah)"/>
+            <path d="M184 134 A 48 48 0 0 1 116 134" fill="none" stroke="var(--accent)" stroke-width="2" marker-end="url(#ah)"/>
+            <path d="M104 112 A 48 48 0 0 1 138 54" fill="none" stroke="var(--accent)" stroke-width="2" marker-end="url(#ah)"/>
+          </svg>
+          <div class="loop-center">↺</div>
+          <div class="lnode n1"><span class="n">Gera</span><span class="t">O desafio do dia</span><span class="d">A partir do material do criador + do estado atual do aluno.</span></div>
+          <div class="lnode n2"><span class="n">Coleta</span><span class="t">O sinal</span><span class="d">Desempenho e percepção viram insumo, não relatório morto.</span></div>
+          <div class="lnode n3"><span class="n">Recalibra</span><span class="t">O próximo passo</span><span class="d">Dificuldade e trilha ajustam-se ao indivíduo.</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5 — 04 O diferencial (Camada 4) -->
+  <section class="slide s-04">
+    <div class="rail">
+      <div class="eyebrow"><span class="tick">04</span> O diferencial</div>
+      <div class="counter"></div>
+    </div>
+    <div class="body">
+      <div class="split">
+        <div class="stackviz" aria-hidden="true">
+          <svg viewBox="0 0 260 220" preserveAspectRatio="xMidYMid meet">
+            <rect x="20" y="20" width="180" height="26" rx="3" fill="var(--muted)" fill-opacity=".18" stroke="var(--line)"/>
+            <rect x="20" y="58" width="180" height="26" rx="3" fill="var(--muted)" fill-opacity=".18" stroke="var(--line)"/>
+            <rect x="20" y="96" width="180" height="26" rx="3" fill="var(--muted)" fill-opacity=".18" stroke="var(--line)"/>
+            <rect x="20" y="134" width="180" height="26" rx="3" fill="var(--muted)" fill-opacity=".18" stroke="var(--line)"/>
+            <rect x="20" y="172" width="180" height="26" rx="3" fill="var(--muted)" fill-opacity=".18" stroke="var(--line)"/>
+            <rect x="210" y="14" width="34" height="192" rx="4" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="2"/>
+            <text x="227" y="110" text-anchor="middle" transform="rotate(90 227 110)" font-family="var(--font-mono)" font-size="13" letter-spacing="3" fill="var(--accent-ink)">AVALIAÇÃO</text>
+            <text x="13" y="110" text-anchor="middle" transform="rotate(-90 13 110)" font-family="var(--font-mono)" font-size="10.5" letter-spacing="2" fill="var(--muted)">CAMADAS DO SISTEMA</text>
+          </svg>
+        </div>
+        <div>
+          <h2 class="serif-l">Medir se o que a IA gerou presta.</h2>
+          <div class="checks">
+            <div class="check"><span class="q">?</span><p>O desafio gerado presta?</p></div>
+            <div class="check"><span class="q">?</span><p>O feedback do aluno é confiável?</p></div>
+            <div class="check"><span class="q">?</span><p>A dificuldade calibrou certo?</p></div>
+            <div class="check"><span class="q">?</span><p>A resposta do tutor está ancorada — ou inventou?</p></div>
+          </div>
+          <p class="kick" style="margin-top:1.1rem;">A camada de avaliação — <strong>LLM-as-judge, golden datasets, detecção de alucinação.</strong> O osso técnico, onde os concorrentes generativos quebram. E um <span class="accent">problema de pesquisa aberto</span> (EDM / AIED).</p>
+          <p class="cap" style="margin-top:.7rem;">O tutor conversacional e o assistente administrativo entram no roadmap como higiene — não como diferencial.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6 — 05 Campo de prova (demo) -->
+  <section class="slide s-05">
+    <div class="rail">
+      <div class="eyebrow"><span class="tick">05</span> Campo de prova &nbsp;<span class="live">▶ demo ao vivo</span></div>
+      <div class="counter"></div>
+    </div>
+    <div class="body">
+      <div class="split">
+        <div>
+          <h2 class="sans-h">Não precisamos procurar um piloto. Nós somos o piloto.</h2>
+          <div class="who">
+            <span class="lbl">Guta — a cliente-alvo</span>
+            <p>Infoprodutora com <strong>produtos no ar, audiência e dados reais.</strong> Advogada com prática em LGPD — governança como diferencial de fundação.</p>
+          </div>
+          <div class="who">
+            <span class="lbl">Ricardo — o núcleo técnico</span>
+            <p>PhD com pesquisa em <strong>predição de evasão e desempenho</strong> — o coração do Student Model.</p>
+          </div>
+          <p class="kick" style="margin-top:1.1rem;">Nenhum concorrente institucional tem um fundador que <span class="accent">é</span> o cliente. Founder-market fit literal.</p>
+        </div>
+        <div>
+          <div class="browser" aria-hidden="true">
+            <div class="bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="url">curso.guta.com.br/painel</span><span class="prev">prévia</span></div>
+            <div class="screen">
+              <div class="stitle">Onde a turma trava</div>
+              <div class="ssub">Módulo 3 · 214 alunos ativos</div>
+              <div class="barchart">
+                <div class="b" style="height:38%;"></div>
+                <div class="b" style="height:55%;"></div>
+                <div class="b hot" style="height:100%;"></div>
+                <div class="b" style="height:47%;"></div>
+                <div class="b" style="height:29%;"></div>
+                <div class="b" style="height:62%;"></div>
+                <div class="b" style="height:41%;"></div>
+              </div>
+              <div class="tiles">
+                <div class="tile hot"><div class="tn">3.4</div><div class="tl">aula que trava</div></div>
+                <div class="tile"><div class="tn">71%</div><div class="tl">conclusão</div></div>
+                <div class="tile"><div class="tn">D21</div><div class="tl">retenção</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7 — 06 Timing -->
+  <section class="slide s-06">
+    <div class="rail">
+      <div class="eyebrow"><span class="tick">06</span> Timing</div>
+      <div class="counter"></div>
+    </div>
+    <div class="body">
+      <div class="split">
+        <div class="growth" aria-hidden="true">
+          <svg viewBox="0 0 300 250" preserveAspectRatio="xMidYMid meet">
+            <line x1="30" y1="210" x2="290" y2="210" stroke="var(--line)" stroke-width="1.5"/>
+            <rect x="70" y="188" width="56" height="22" fill="var(--muted)" fill-opacity=".55"/>
+            <rect x="180" y="34" width="56" height="176" fill="var(--data)"/>
+            <path d="M100 180 Q 150 70 205 40" fill="none" stroke="var(--data)" stroke-width="2" stroke-dasharray="4 4" marker-end="url(#ah2)"/>
+            <defs><marker id="ah2" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="var(--data)"/></marker></defs>
+            <text x="150" y="120" text-anchor="middle" font-family="var(--font-mono)" font-size="18" font-weight="700" fill="var(--data-ink)">+700%</text>
+            <text x="208" y="26" text-anchor="middle" font-family="var(--font-sans)" font-size="15" font-weight="800" fill="var(--data-ink)">R$ 142,8 mi</text>
+            <text x="98" y="230" text-anchor="middle" font-family="var(--font-mono)" font-size="11" fill="var(--muted)">2 anos atrás</text>
+            <text x="208" y="230" text-anchor="middle" font-family="var(--font-mono)" font-size="11" fill="var(--muted)">2025</text>
+          </svg>
+        </div>
+        <div>
+          <h2 class="serif-l" style="margin-bottom:1rem;">A janela está aberta. O relógio, correndo.</h2>
+          <div class="why-now">
+            <span class="stat">R$ 142,8 mi · +700%</span>
+            <p>Só na Hotmart, produtos de IA em 2025 (crescimento em 2 anos). Janela estimada: <strong>12–24 meses</strong> antes de o incumbente subir a pilha.</p>
+          </div>
+          <div class="why-cesar">
+            <span class="lbl">Por que CESAR</span>
+            <p>Educação é <strong>setor preferencial</strong> da tese. GenAI é aposta institucional desde 2023. E a camada de avaliação é a <strong>linha de pesquisa da casa</strong> (AIED 2024).</p>
+          </div>
+          <p class="cap" style="margin-top:1rem;">Fonte — <span class="em">Press Hotmart (2026); tese pública de investimento do CESAR.</span></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8 — 07 O caminho -->
+  <section class="slide s-07">
+    <div class="rail">
+      <div class="eyebrow"><span class="tick">07</span> O caminho</div>
+      <div class="counter"></div>
+    </div>
+    <div class="body">
+      <h2 class="serif-l">Construir juntos — e cedo.</h2>
+      <div class="pathgrid">
+        <div class="routes">
+          <div class="route">
+            <span class="lbl">Rota 1 — Cocriação</span>
+            <p>Venture building / impulsionamento: engenharia, metodologia e rede do CESAR; a tese, o domínio e o campo de prova nossos.</p>
+          </div>
+          <div class="route">
+            <span class="lbl">Rota 2 — Pesquisa aplicada</span>
+            <p>Parceria com a CESAR School sobre <strong>avaliação de conteúdo gerado por LLM</strong> — usando nossos produtos como dataset real.</p>
+          </div>
+        </div>
+        <div class="connector" aria-hidden="true">
+          <svg width="70" height="120" viewBox="0 0 70 120">
+            <path d="M2 30 C 40 30 30 60 66 60" fill="none" stroke="var(--accent)" stroke-width="2" marker-end="url(#ah3)"/>
+            <path d="M2 90 C 40 90 30 60 66 60" fill="none" stroke="var(--accent)" stroke-width="2"/>
+            <defs><marker id="ah3" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="var(--accent)"/></marker></defs>
+          </svg>
+        </div>
+        <div class="terminal">
+          <span class="lbl">Próximo passo — não é aporte</span>
+          <p>Uma reunião técnica com a School, e enquadrar o piloto como projeto conjunto. <em>“Sai de qualquer jeito; com vocês, sai melhor, mais rápido — e daqui, de Recife.”</em></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 9 — Encerramento (manifesto) -->
+  <section class="slide s-close">
+    <div class="rail">
+      <div class="eyebrow"><span class="tick">■</span> Argumento-assinatura</div>
+      <div class="counter"></div>
+    </div>
+    <div class="body">
+      <span class="ghost" style="right:0; bottom:-6vh; font-size:40vh;">”</span>
+      <p class="quote-q">Toda plataforma coloca IA para o criador produzir mais rápido. Ninguém coloca IA para o aluno <em>aprender melhor</em> — porque isso exige encarar o problema que ninguém quer: <em>medir se o que a IA gerou presta.</em></p>
+      <p class="quote-attr">Essa é a nossa aposta técnica central — e é o vão que queremos ocupar, daqui, de Recife.</p>
+      <p class="quote-sign">Guta Britto Alves · Ricardo Neves Junior</p>
+    </div>
+  </section>
+
+</main>
+
+<div class="progress" id="progress"></div>
+<nav class="nav" aria-label="Navegação dos slides">
+  <button class="navbtn" id="prev" aria-label="Slide anterior">‹</button>
+  <div class="dots" id="dots"></div>
+  <button class="navbtn" id="next" aria-label="Próximo slide">›</button>
+</nav>
+<div class="hint">← → navegar &nbsp;·&nbsp; F tela cheia</div>
+
+<script>
+  (function(){
+    var slides = Array.prototype.slice.call(document.querySelectorAll('.slide'));
+    var total = slides.length;
+    var i = 0;
+    var dotsWrap = document.getElementById('dots');
+    var progress = document.getElementById('progress');
+    var counters = document.querySelectorAll('.counter');
+    function pad(n){return (n<10?'0':'')+n;}
+    slides.forEach(function(_,idx){
+      var b = document.createElement('button');
+      b.className='dot'; b.setAttribute('aria-label','Ir para slide '+(idx+1));
+      b.addEventListener('click', function(e){ e.stopPropagation(); go(idx); });
+      dotsWrap.appendChild(b);
+    });
+    var dots = Array.prototype.slice.call(dotsWrap.children);
+    function render(){
+      slides.forEach(function(s,idx){ s.classList.toggle('active', idx===i); });
+      dots.forEach(function(d,idx){ d.classList.toggle('on', idx===i); });
+      counters.forEach(function(c){ c.textContent = pad(i+1)+' / '+pad(total); });
+      progress.style.width = ((i)/(total-1)*100)+'%';
+    }
+    function go(n){ i = Math.max(0, Math.min(total-1, n)); render(); }
+    function next(){ if(i<total-1) go(i+1); }
+    function prev(){ if(i>0) go(i-1); }
+    document.addEventListener('keydown', function(e){
+      if(e.key==='ArrowRight'||e.key===' '||e.key==='PageDown'){ e.preventDefault(); next(); }
+      else if(e.key==='ArrowLeft'||e.key==='Backspace'||e.key==='PageUp'){ e.preventDefault(); prev(); }
+      else if(e.key==='Home'){ go(0); }
+      else if(e.key==='End'){ go(total-1); }
+      else if(e.key==='f'||e.key==='F'){ toggleFs(); }
+    });
+    document.getElementById('deck').addEventListener('click', function(e){
+      if(e.target.closest('button,a,.dot,.ctl,.navbtn')) return;
+      next();
+    });
+    document.getElementById('next').addEventListener('click', function(e){e.stopPropagation(); next();});
+    document.getElementById('prev').addEventListener('click', function(e){e.stopPropagation(); prev();});
+    if(!document.documentElement.getAttribute('data-theme')){ document.documentElement.setAttribute('data-theme','dark'); }
+    document.getElementById('themeBtn').addEventListener('click', function(){
+      var root = document.documentElement;
+      var cur = root.getAttribute('data-theme') || 'dark';
+      root.setAttribute('data-theme', cur==='dark'?'light':'dark');
+    });
+    function toggleFs(){
+      if(!document.fullscreenElement){ if(document.documentElement.requestFullscreen) document.documentElement.requestFullscreen(); }
+      else if(document.exitFullscreen){ document.exitFullscreen(); }
+    }
+    document.getElementById('fsBtn').addEventListener('click', toggleFs);
+    render();
+  })();
+</script>
+
+</html>
