@@ -238,6 +238,11 @@
   .q-cell.gap strong{font-family:var(--font-display); font-size:1.35rem; color:var(--accent-ink);}
   .q-cell.gap .qsub{display:block; font-family:var(--font-mono); font-size:.66rem; letter-spacing:.1em; color:var(--accent-ink); margin-top:.25rem;}
 
+  /* 04 - callout de evidencia (Khanmigo/WSJ) */
+  .evid{border-left:2px solid var(--data); background:var(--data-soft); padding:.6rem .9rem; border-radius:0 4px 4px 0; margin-top:1rem; font-size:.95rem; color:var(--text); line-height:1.45;}
+  .evid strong{color:var(--data-ink);}
+  .evsrc{font-family:var(--font-mono); font-size:.62rem; letter-spacing:.06em; color:var(--data-ink); white-space:nowrap;}
+
   /* controls & nav (unchanged logic) */
   .controls{position:fixed; top:.9rem; right:1rem; display:flex; gap:.4rem; z-index:20;}
   .ctl{font-family:var(--font-mono); font-size:.72rem; color:var(--muted); background:transparent; border:1px solid var(--line); border-radius:3px; width:2rem; height:2rem; display:grid; place-items:center; cursor:pointer; padding:0; transition:color .2s,border-color .2s;}
@@ -425,6 +430,7 @@
             <div class="check"><span class="q">?</span><p>A resposta do tutor está ancorada, ou inventou?</p></div>
           </div>
           <p class="kick" style="margin-top:1.1rem;">A camada de avaliação: <strong>LLM-as-judge, golden datasets, detecção de alucinação.</strong> O osso técnico, onde os concorrentes generativos quebram. E um <span class="accent">problema de pesquisa aberto</span> (EDM / AIED).</p>
+          <p class="evid"><strong>Prova real:</strong> em 2024, o Wall Street Journal testou o Khanmigo (Khan Academy) e ele errou contas básicas. O tutor de IA mais conhecido do mundo falha exatamente no que a Camada 4 mede. <span class="evsrc">WSJ, fev/2024</span></p>
           <p class="cap" style="margin-top:.7rem;">O tutor conversacional e o assistente administrativo entram no roadmap como higiene, não como diferencial.</p>
         </div>
       </div>
@@ -469,7 +475,7 @@
           <h2 class="sans-h">Não precisamos procurar um piloto. Nós somos o piloto.</h2>
           <div class="who">
             <span class="lbl">Guta: a cliente-alvo</span>
-            <p>Infoprodutora com <strong>produtos no ar, audiência e dados reais.</strong> Advogada com prática em LGPD. Governança como diferencial de fundação.</p>
+            <p>Infoprodutora com <strong>produtos no ar, audiência e dados reais.</strong> Advogada com prática em LGPD: com o marco de IA (PL 2338) a caminho, governança de dados já nasce como diferencial, não pendência.</p>
           </div>
           <div class="who">
             <span class="lbl">Ricardo: o núcleo técnico</span>
@@ -541,10 +547,60 @@
     </div>
   </section>
 
-  <!-- 8 - 07 O caminho -->
+  <!-- 8 - Por que o criador paga (business case) -->
+  <section class="slide s-06">
+    <div class="rail">
+      <div class="eyebrow"><span class="tick">08</span> Por que o criador paga</div>
+      <div class="counter"></div>
+    </div>
+    <div class="body">
+      <div class="split">
+        <div class="why-now">
+          <span class="lbl" style="color:var(--data-ink);">Prova de negócio</span>
+          <span class="stat" style="color:var(--data-ink); display:block; margin:.4rem 0 .5rem;">US$ 748 mi</span>
+          <p>A personalização adaptativa (Birdbrain) é o <strong>motor de assinatura</strong> da Duolingo: US$ 748 mi de receita em 2024, +41% no ano, ~80% vindo de assinatura. Personalizar não é custo pedagógico, é receita.</p>
+        </div>
+        <div>
+          <h2 class="serif-l" style="margin-bottom:1rem;">Aprender melhor vira faturar mais.</h2>
+          <p class="kick"><strong>O dinheiro que vaza:</strong> a evasão no EAD brasileiro chegou a <strong>41,6% em 2024</strong>. No infoproduto, o reembolso mora na <strong>janela de 7 dias</strong>, antes de o aluno sentir progresso.</p>
+          <p class="kick" style="margin-top:.9rem;">A Camada 4 intervém cedo: <span class="accent">menos reembolso, mais renovação e upsell pela lacuna</span>. Sobe o ticket por aluno, não só a conclusão.</p>
+        </div>
+      </div>
+      <p class="cap" style="margin-top:1.2rem;">Fonte: <span class="em">Duolingo (relatórios a investidores, 2024); evasão EAD 41,6%, Semesp, 16º Mapa do Ensino Superior.</span></p>
+    </div>
+  </section>
+
+  <!-- 9 - Modelo de receita -->
+  <section class="slide s-05b">
+    <div class="rail">
+      <div class="eyebrow"><span class="tick">09</span> Modelo de receita</div>
+      <div class="counter"></div>
+    </div>
+    <div class="body">
+      <h2 class="serif-l">Três vetores de receita, um só motor.</h2>
+      <div class="gains">
+        <div class="gain">
+          <span class="gn">Assinatura · B2C</span>
+          <p>O criador cobra curso ou mensalidade. A personalização eleva retenção e ticket por aluno (o modelo Duolingo).</p>
+        </div>
+        <div class="gain">
+          <span class="gn">Pago por resultado · institucional</span>
+          <p>A avaliação destrava contratos por resultado comprovado com fundações e poder público (ex.: Education Outcomes Fund, hospedado pela UNICEF).</p>
+        </div>
+        <div class="gain">
+          <span class="gn">P&amp;D com incentivo · corporativo</span>
+          <p>Oferecido como P&amp;D via Lei do Bem, o cliente corporativo recupera de 20% a 34% do investimento em impostos.</p>
+        </div>
+      </div>
+      <p class="kick" style="margin-top:1.4rem;">O que destrava os três é a mesma coisa: <span class="accent">medir resultado</span>. Sem avaliação confiável, não há assinatura que retém, contrato por resultado nem P&amp;D que se comprova.</p>
+      <p class="cap" style="margin-top:.8rem;">Fonte: <span class="em">Education Outcomes Fund (UNICEF); Lei do Bem 11.196/2005 (MCTI).</span></p>
+    </div>
+  </section>
+
+  <!-- 10 - O caminho -->
   <section class="slide s-07">
     <div class="rail">
-      <div class="eyebrow"><span class="tick">08</span> O caminho</div>
+      <div class="eyebrow"><span class="tick">10</span> O caminho</div>
       <div class="counter"></div>
     </div>
     <div class="body">
