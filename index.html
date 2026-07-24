@@ -226,6 +226,18 @@
   .gain .gn{font-family:var(--font-mono); font-size:.72rem; letter-spacing:.14em; text-transform:uppercase; color:var(--accent-ink); display:block; margin-bottom:.5rem;}
   .gain p{margin:0; font-size:clamp(1rem,1.4vw,1.15rem); color:var(--text); line-height:1.45;}
 
+  /* 02 - quadrante do vao */
+  .quad{display:grid; grid-template-columns:1fr 1fr; gap:.7rem; margin-top:1.4rem;}
+  @media (max-width:820px){ .quad{grid-template-columns:1fr;} }
+  .q-cell{border:1px solid var(--line); border-radius:5px; padding:.95rem 1.1rem; background:var(--panel); min-height:90px;}
+  .q-cell .qt{font-family:var(--font-mono); font-size:.62rem; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); display:block; margin-bottom:.5rem;}
+  .q-cell p{margin:0; font-family:var(--font-mono); font-size:.98rem; color:var(--muted); line-height:1.45;}
+  .q-cell.gap{border-color:var(--accent); box-shadow:0 0 0 1px var(--accent) inset; background:var(--accent-soft);}
+  .q-cell.gap .qt{color:var(--accent-ink);}
+  .q-cell.gap p{color:var(--accent-ink);}
+  .q-cell.gap strong{font-family:var(--font-display); font-size:1.35rem; color:var(--accent-ink);}
+  .q-cell.gap .qsub{display:block; font-family:var(--font-mono); font-size:.66rem; letter-spacing:.1em; color:var(--accent-ink); margin-top:.25rem;}
+
   /* controls & nav (unchanged logic) */
   .controls{position:fixed; top:.9rem; right:1rem; display:flex; gap:.4rem; z-index:20;}
   .ctl{font-family:var(--font-mono); font-size:.72rem; color:var(--muted); background:transparent; border:1px solid var(--line); border-radius:3px; width:2rem; height:2rem; display:grid; place-items:center; cursor:pointer; padding:0; transition:color .2s,border-color .2s;}
@@ -293,20 +305,20 @@
           </div>
         </div>
         <div class="chart-wrap">
-          <svg viewBox="0 0 520 340" role="img" aria-label="Duas curvas de distribuição: ensino tradicional e tutoria 1:1, deslocadas em dois desvios-padrão">
+          <svg viewBox="0 0 520 340" role="img" aria-label="Duas curvas de distribuição: ensino tradicional e tutoria 1:1, com o deslocamento do ganho de aprendizagem">
             <line x1="30" y1="280" x2="495" y2="280" stroke="var(--line)" stroke-width="1.5"/>
             <path d="M40 280 C 122.5 280 145 80 190 80 C 235 80 257.5 280 340 280 Z" fill="var(--muted)" fill-opacity=".14" stroke="var(--muted)" stroke-width="2"/>
-            <path d="M170 280 C 252.5 280 275 80 320 80 C 365 80 387.5 280 470 280 Z" fill="var(--data-soft)" stroke="var(--data)" stroke-width="2.5"/>
+            <path d="M110 280 C 192.5 280 215 80 260 80 C 305 80 327.5 280 410 280 Z" fill="var(--data-soft)" stroke="var(--data)" stroke-width="2.5"/>
             <line x1="190" y1="80" x2="190" y2="280" stroke="var(--muted)" stroke-width="1" stroke-dasharray="3 4"/>
-            <line x1="320" y1="80" x2="320" y2="280" stroke="var(--data)" stroke-width="1" stroke-dasharray="3 4"/>
-            <path d="M190 62 L320 62" stroke="var(--ink)" stroke-width="1.2"/>
-            <path d="M190 58 L190 66 M320 58 L320 66" stroke="var(--ink)" stroke-width="1.2"/>
-            <text x="255" y="52" text-anchor="middle" font-family="var(--font-mono)" font-size="17" font-weight="700" fill="var(--ink)">+2σ</text>
+            <line x1="260" y1="80" x2="260" y2="280" stroke="var(--data)" stroke-width="1" stroke-dasharray="3 4"/>
+            <path d="M190 62 L260 62" stroke="var(--ink)" stroke-width="1.2"/>
+            <path d="M190 58 L190 66 M260 58 L260 66" stroke="var(--ink)" stroke-width="1.2"/>
+            <text x="225" y="52" text-anchor="middle" font-family="var(--font-mono)" font-size="12" letter-spacing="1" fill="var(--ink)">ganho real</text>
             <text x="150" y="303" text-anchor="middle" font-family="var(--font-mono)" font-size="12" fill="var(--muted)">Ensino tradicional</text>
-            <text x="368" y="303" text-anchor="middle" font-family="var(--font-mono)" font-size="12" fill="var(--data-ink)">Tutoria 1:1</text>
+            <text x="285" y="303" text-anchor="middle" font-family="var(--font-mono)" font-size="12" fill="var(--data-ink)">Tutoria 1:1</text>
           </svg>
-          <p class="kick" style="margin-top:1rem;">É o <span class="accent">2 Sigma Problem</span> de Bloom (1984): tutoria 1:1 rende <strong>+2 desvios-padrão</strong>. E nunca escalou, por custo.</p>
-          <p class="cap" style="margin-top:.7rem;">Fonte: <span class="em">Bloom, B. S. (1984), The 2 Sigma Problem, Educational Researcher.</span></p>
+          <p class="kick" style="margin-top:1rem;">É o <span class="accent">2 Sigma Problem</span> de Bloom (1984). O “+2σ” virou citação clássica, hoje debatida: meta-análises rigorosas apontam <strong>~0,3 a 0,4 DP</strong>. Um efeito menor, mas real e consistente, que nunca escalou por custo.</p>
+          <p class="cap" style="margin-top:.7rem;">Fonte: <span class="em">Bloom (1984); meta-análise de Nickow, Oreopoulos e Quan (2020), efeito ~0,37 DP.</span></p>
         </div>
       </div>
     </div>
@@ -328,37 +340,26 @@
         </div>
       </div>
 
-      <div class="axis-viz" aria-hidden="true">
-        <svg viewBox="0 0 1000 130" preserveAspectRatio="xMidYMid meet">
-          <defs>
-            <linearGradient id="spec" x1="0" x2="1" y1="0" y2="0">
-              <stop offset="0" stop-color="var(--muted)"/>
-              <stop offset="1" stop-color="var(--accent)"/>
-            </linearGradient>
-          </defs>
-          <line x1="40" y1="70" x2="960" y2="70" stroke="url(#spec)" stroke-width="2.5"/>
-          <text x="40" y="52" font-family="var(--font-mono)" font-size="15" letter-spacing="2" fill="var(--muted)">RASO</text>
-          <text x="960" y="52" text-anchor="end" font-family="var(--font-mono)" font-size="15" letter-spacing="2" fill="var(--accent-ink)">PROFUNDO</text>
-          <!-- shallow players -->
-          <circle cx="150" cy="70" r="6" fill="var(--muted)"/><text x="150" y="98" text-anchor="middle" font-family="var(--font-mono)" font-size="12" fill="var(--muted)">LearnWorlds</text>
-          <circle cx="270" cy="70" r="6" fill="var(--muted)"/><text x="270" y="98" text-anchor="middle" font-family="var(--font-mono)" font-size="12" fill="var(--muted)">Thinkific</text>
-          <circle cx="390" cy="70" r="6" fill="var(--muted)"/><text x="390" y="98" text-anchor="middle" font-family="var(--font-mono)" font-size="12" fill="var(--muted)">Hotmart Labs</text>
-          <!-- gap -->
-          <rect x="700" y="60" width="240" height="48" rx="4" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.5" stroke-dasharray="6 5"/>
-          <text x="820" y="90" text-anchor="middle" font-family="var(--font-mono)" font-size="14" letter-spacing="2" fill="var(--accent-ink)">O VÃO</text>
-        </svg>
+      <div class="quad">
+        <div class="q-cell">
+          <span class="qt">Institucional · Raso</span>
+          <p>Ferramentas escolares básicas</p>
+        </div>
+        <div class="q-cell">
+          <span class="qt">Institucional · Profundo</span>
+          <p>Geekie · Aprimora · Squirrel AI</p>
+        </div>
+        <div class="q-cell">
+          <span class="qt">Creator · Raso</span>
+          <p>LearnWorlds · Thinkific · Hotmart</p>
+        </div>
+        <div class="q-cell gap">
+          <span class="qt">Creator · Profundo</span>
+          <p><strong>O VÃO</strong><span class="qsub">vazio hoje</span></p>
+        </div>
       </div>
 
-      <div class="axis-ends">
-        <div class="end">
-          <span class="lbl">Raso: o que existe</span>
-          <p>IA para o <strong>criador produzir mais rápido</strong> e caminhos condicionais. LearnWorlds, Thinkific, Hotmart Labs.</p>
-        </div>
-        <div class="end deep">
-          <span class="lbl">Profundo: o que ninguém encara</span>
-          <p>Geração da experiência <strong>por aluno, em loop fechado, com avaliação da qualidade.</strong></p>
-        </div>
-      </div>
+      <p class="kick" style="margin-top:1.2rem;"><strong>Raso:</strong> IA para o criador produzir mais rápido. <strong>Profundo:</strong> gerar a experiência por aluno, com avaliação. O profundo existe, mas preso no institucional. No creator, o vão está aberto.</p>
       <p class="cap" style="margin-top:1.2rem;">Fonte: <span class="em">Grand View Research, Adaptive Learning Market (segmento acadêmico dominante).</span></p>
     </div>
   </section>
@@ -582,7 +583,7 @@
     </div>
     <div class="body">
       <span class="ghost" style="right:0; bottom:-6vh; font-size:40vh;">”</span>
-      <p class="quote-q">Toda plataforma coloca IA para o criador produzir mais rápido. Ninguém coloca IA para o aluno <em>aprender melhor</em>, porque isso exige encarar o problema que ninguém quer: <em>medir se o que a IA gerou se sustenta.</em></p>
+      <p class="quote-q">Na creator economy, toda plataforma coloca IA para o criador produzir mais rápido. Ninguém a colocou para o aluno <em>aprender melhor</em> em loop, porque isso exige encarar o problema que ninguém quer: <em>medir se o que a IA gerou se sustenta.</em></p>
       <p class="quote-attr">Essa é a nossa aposta técnica central, e é o vão que queremos ocupar, daqui, de Recife.</p>
       <p class="quote-sign">Guta Britto Alves · Ricardo Neves Junior</p>
     </div>
