@@ -5,9 +5,9 @@
 <meta name="robots" content="noindex, nofollow">
 <meta name="description" content="Plataforma de Educacao Adaptativa Generativa">
 <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%3E%3Ctext%20y='.9em'%20font-size='90'%3E%E2%97%90%3C/text%3E%3C/svg%3E">
-<title>Plataforma de Educação Adaptativa — Conversa CESAR</title>
+<title>Plataforma de Educação Adaptativa · Conversa CESAR</title>
 <style>
-  /* Paleta NEON DARK MODE — dark por padrão (identidade comprometida com o escuro) */
+  /* Paleta NEON DARK MODE - dark por padrão (identidade comprometida com o escuro) */
   :root{
     --ground:#080808; --panel:#141414; --panel-2:#1C1C21;
     --ink:#F4F4F6; --text:#D2D2DA; --muted:#9E9EA8;
@@ -20,7 +20,7 @@
     --font-mono:"SF Mono","Cascadia Code","JetBrains Mono",Consolas,"Liberation Mono",monospace;
     --pad-y:clamp(1.4rem,5vh,3rem); --pad-x:clamp(1.3rem,7vw,6rem);
   }
-  /* Fallback claro (sala clara / impressão) — neon rebaixado para contraste acessível */
+  /* Fallback claro (sala clara / impressão) - neon rebaixado para contraste acessível */
   :root[data-theme="light"]{
     --ground:#F4F4F5; --panel:#FFFFFF; --panel-2:#ECECEF;
     --ink:#141414; --text:#34353B; --muted:#86868C;
@@ -219,6 +219,13 @@
   .terminal p{margin:0; font-size:clamp(1.02rem,1.5vw,1.18rem); color:var(--ink); line-height:1.45;}
   .terminal em{color:var(--accent-ink); font-style:italic;}
 
+  /* 05b - inteligencia para o criador */
+  .gains{display:grid; grid-template-columns:repeat(3,1fr); gap:clamp(1rem,3vw,2.2rem); margin-top:1.8rem;}
+  @media (max-width:820px){ .gains{grid-template-columns:1fr; gap:1.1rem;} }
+  .gain{border-top:2px solid var(--accent); padding-top:.8rem;}
+  .gain .gn{font-family:var(--font-mono); font-size:.72rem; letter-spacing:.14em; text-transform:uppercase; color:var(--accent-ink); display:block; margin-bottom:.5rem;}
+  .gain p{margin:0; font-size:clamp(1rem,1.4vw,1.15rem); color:var(--text); line-height:1.45;}
+
   /* controls & nav (unchanged logic) */
   .controls{position:fixed; top:.9rem; right:1rem; display:flex; gap:.4rem; z-index:20;}
   .ctl{font-family:var(--font-mono); font-size:.72rem; color:var(--muted); background:transparent; border:1px solid var(--line); border-radius:3px; width:2rem; height:2rem; display:grid; place-items:center; cursor:pointer; padding:0; transition:color .2s,border-color .2s;}
@@ -251,7 +258,7 @@
 
 <main class="deck" id="deck">
 
-  <!-- 1 — Capa (manifesto) -->
+  <!-- 1 - Capa (manifesto) -->
   <section class="slide s-hero active">
     <div class="rail">
       <div class="eyebrow"><span class="tick">■</span> Proposta · CESAR × Recife · 2026</div>
@@ -259,13 +266,13 @@
     </div>
     <div class="body">
       <span class="ghost" style="right:-1vw; top:-2vh; font-size:38vh;">↺</span>
-      <h1 class="serif-xl">Educação que se adapta a cada aluno — e que sabe se o que gerou <span class="mark">se sustenta</span>.</h1>
+      <h1 class="serif-xl">Educação que se adapta a cada aluno e sabe se o que gerou <span class="mark">se sustenta</span>.</h1>
       <p class="cover-lead">Plataforma de Educação Adaptativa Generativa para o mercado creator.</p>
-      <div class="cover-names">Guta Britto Alves &nbsp;·&nbsp; Ricardo Neves Junior &nbsp;<span>— Recife/PE</span></div>
+      <div class="cover-names">Guta Britto Alves &nbsp;·&nbsp; Ricardo Neves Junior &nbsp;·&nbsp; <span>Recife/PE</span></div>
     </div>
   </section>
 
-  <!-- 2 — 01 Problema (Bloom) -->
+  <!-- 2 - 01 Problema (Bloom) -->
   <section class="slide s-01">
     <div class="rail">
       <div class="eyebrow"><span class="tick">01</span> O problema</div>
@@ -278,7 +285,7 @@
           <h2 class="sans-h">Personalização ou escala. Nunca os dois.</h2>
           <div class="ctx-item">
             <span class="lbl">Mentoria</span>
-            <p><strong>Personaliza, não escala.</strong> O mentor atua sobre cada caso — mas o gargalo é a agenda dele.</p>
+            <p><strong>Personaliza, não escala.</strong> O mentor atua sobre cada caso, mas o gargalo é a agenda dele.</p>
           </div>
           <div class="ctx-item">
             <span class="lbl">Curso online</span>
@@ -298,14 +305,14 @@
             <text x="150" y="303" text-anchor="middle" font-family="var(--font-mono)" font-size="12" fill="var(--muted)">Ensino tradicional</text>
             <text x="368" y="303" text-anchor="middle" font-family="var(--font-mono)" font-size="12" fill="var(--data-ink)">Tutoria 1:1</text>
           </svg>
-          <p class="kick" style="margin-top:1rem;">É o <span class="accent">2 Sigma Problem</span> de Bloom (1984): tutoria 1:1 rende <strong>+2 desvios-padrão</strong> — e nunca escalou, por custo.</p>
-          <p class="cap" style="margin-top:.7rem;">Fonte — <span class="em">Bloom, B. S. (1984), The 2 Sigma Problem, Educational Researcher.</span></p>
+          <p class="kick" style="margin-top:1rem;">É o <span class="accent">2 Sigma Problem</span> de Bloom (1984): tutoria 1:1 rende <strong>+2 desvios-padrão</strong>. E nunca escalou, por custo.</p>
+          <p class="cap" style="margin-top:.7rem;">Fonte: <span class="em">Bloom, B. S. (1984), The 2 Sigma Problem, Educational Researcher.</span></p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- 3 — 02 O vão (eixo raso→profundo) -->
+  <!-- 3 - 02 O vão (eixo raso→profundo) -->
   <section class="slide s-02">
     <div class="rail">
       <div class="eyebrow"><span class="tick">02</span> O vão</div>
@@ -344,19 +351,19 @@
 
       <div class="axis-ends">
         <div class="end">
-          <span class="lbl">Raso — o que existe</span>
+          <span class="lbl">Raso: o que existe</span>
           <p>IA para o <strong>criador produzir mais rápido</strong> e caminhos condicionais. LearnWorlds, Thinkific, Hotmart Labs.</p>
         </div>
         <div class="end deep">
-          <span class="lbl">Profundo — o que ninguém encara</span>
+          <span class="lbl">Profundo: o que ninguém encara</span>
           <p>Geração da experiência <strong>por aluno, em loop fechado, com avaliação da qualidade.</strong></p>
         </div>
       </div>
-      <p class="cap" style="margin-top:1.2rem;">Fonte — <span class="em">Grand View Research, Adaptive Learning Market (segmento acadêmico dominante).</span></p>
+      <p class="cap" style="margin-top:1.2rem;">Fonte: <span class="em">Grand View Research, Adaptive Learning Market (segmento acadêmico dominante).</span></p>
     </div>
   </section>
 
-  <!-- 4 — 03 A solução (loop) -->
+  <!-- 4 - 03 A solução (loop) -->
   <section class="slide s-03">
     <div class="rail">
       <div class="eyebrow"><span class="tick">03</span> A solução</div>
@@ -366,7 +373,7 @@
       <div class="split">
         <div>
           <h2 class="serif-l">Um loop fechado, calibrado a cada dia.</h2>
-          <p class="loopback">↺ &nbsp;<b>Loop diário</b> — pega a escala do curso e injeta a personalização que só a mentoria oferecia.</p>
+          <p class="loopback">↺ &nbsp;<b>Loop diário:</b> pega a escala do curso e injeta a personalização que só a mentoria oferecia.</p>
         </div>
         <div class="loopwrap">
           <svg viewBox="0 0 300 200" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
@@ -388,7 +395,7 @@
     </div>
   </section>
 
-  <!-- 5 — 04 O diferencial (Camada 4) -->
+  <!-- 5 - 04 O diferencial (Camada 4) -->
   <section class="slide s-04">
     <div class="rail">
       <div class="eyebrow"><span class="tick">04</span> O diferencial</div>
@@ -414,19 +421,45 @@
             <div class="check"><span class="q">?</span><p>O desafio gerado se sustenta?</p></div>
             <div class="check"><span class="q">?</span><p>O feedback do aluno é confiável?</p></div>
             <div class="check"><span class="q">?</span><p>A dificuldade calibrou certo?</p></div>
-            <div class="check"><span class="q">?</span><p>A resposta do tutor está ancorada — ou inventou?</p></div>
+            <div class="check"><span class="q">?</span><p>A resposta do tutor está ancorada, ou inventou?</p></div>
           </div>
-          <p class="kick" style="margin-top:1.1rem;">A camada de avaliação — <strong>LLM-as-judge, golden datasets, detecção de alucinação.</strong> O osso técnico, onde os concorrentes generativos quebram. E um <span class="accent">problema de pesquisa aberto</span> (EDM / AIED).</p>
-          <p class="cap" style="margin-top:.7rem;">O tutor conversacional e o assistente administrativo entram no roadmap como higiene — não como diferencial.</p>
+          <p class="kick" style="margin-top:1.1rem;">A camada de avaliação: <strong>LLM-as-judge, golden datasets, detecção de alucinação.</strong> O osso técnico, onde os concorrentes generativos quebram. E um <span class="accent">problema de pesquisa aberto</span> (EDM / AIED).</p>
+          <p class="cap" style="margin-top:.7rem;">O tutor conversacional e o assistente administrativo entram no roadmap como higiene, não como diferencial.</p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- 6 — 05 Campo de prova (demo) -->
+  <!-- 6 - 05 Inteligencia para o criador -->
+  <section class="slide s-05b">
+    <div class="rail">
+      <div class="eyebrow"><span class="tick">05</span> Inteligência para o criador</div>
+      <div class="counter"></div>
+    </div>
+    <div class="body">
+      <h2 class="serif-l">Não só ensina o aluno. Também trabalha para o criador.</h2>
+      <div class="gains">
+        <div class="gain">
+          <span class="gn">O que gravar</span>
+          <p>Aponta as aulas que o criador precisa gravar para atender à demanda e às dúvidas reais dos alunos.</p>
+        </div>
+        <div class="gain">
+          <span class="gn">O que vender</span>
+          <p>Sinaliza oportunidades de upsell: produtos e novos cursos que a audiência já demanda.</p>
+        </div>
+        <div class="gain">
+          <span class="gn">Onde está o gap</span>
+          <p>Revela o gap dos infoprodutos atuais, onde o catálogo deixa a desejar.</p>
+        </div>
+      </div>
+      <p class="kick" style="margin-top:1.4rem;">O mesmo sinal que personaliza a experiência do aluno vira <span class="accent">inteligência de negócio para o criador</span>. O fosso de dados virando receita.</p>
+    </div>
+  </section>
+
+  <!-- 7 - 06 Campo de prova (demo) -->
   <section class="slide s-05">
     <div class="rail">
-      <div class="eyebrow"><span class="tick">05</span> Campo de prova &nbsp;<span class="live">▶ demo ao vivo</span></div>
+      <div class="eyebrow"><span class="tick">06</span> Campo de prova &nbsp;<span class="live">▶ demo ao vivo</span></div>
       <div class="counter"></div>
     </div>
     <div class="body">
@@ -434,12 +467,12 @@
         <div>
           <h2 class="sans-h">Não precisamos procurar um piloto. Nós somos o piloto.</h2>
           <div class="who">
-            <span class="lbl">Guta — a cliente-alvo</span>
-            <p>Infoprodutora com <strong>produtos no ar, audiência e dados reais.</strong> Advogada com prática em LGPD — governança como diferencial de fundação.</p>
+            <span class="lbl">Guta: a cliente-alvo</span>
+            <p>Infoprodutora com <strong>produtos no ar, audiência e dados reais.</strong> Advogada com prática em LGPD. Governança como diferencial de fundação.</p>
           </div>
           <div class="who">
-            <span class="lbl">Ricardo — o núcleo técnico</span>
-            <p>PhD com pesquisa em <strong>predição de evasão e desempenho</strong> — o coração do Student Model.</p>
+            <span class="lbl">Ricardo: o núcleo técnico</span>
+            <p>PhD com pesquisa em <strong>predição de evasão e desempenho</strong>, o coração do Student Model.</p>
           </div>
           <p class="kick" style="margin-top:1.1rem;">Nenhum concorrente institucional tem um fundador que <span class="accent">é</span> o cliente. Founder-market fit literal.</p>
         </div>
@@ -470,10 +503,10 @@
     </div>
   </section>
 
-  <!-- 7 — 06 Timing -->
+  <!-- 7 - 06 Timing -->
   <section class="slide s-06">
     <div class="rail">
-      <div class="eyebrow"><span class="tick">06</span> Timing</div>
+      <div class="eyebrow"><span class="tick">07</span> Timing</div>
       <div class="counter"></div>
     </div>
     <div class="body">
@@ -495,35 +528,35 @@
           <h2 class="serif-l" style="margin-bottom:1rem;">A janela está aberta. O relógio, correndo.</h2>
           <div class="why-now">
             <span class="stat">R$ 142,8 mi · +700%</span>
-            <p>Só na Hotmart, produtos de IA em 2025 (crescimento em 2 anos). Janela estimada: <strong>12–24 meses</strong> antes de o incumbente subir a pilha.</p>
+            <p>Só na Hotmart, produtos de IA em 2025 (crescimento em 2 anos). Janela estimada: <strong>12 a 24 meses</strong> antes de o incumbente subir a pilha.</p>
           </div>
           <div class="why-cesar">
             <span class="lbl">Por que CESAR</span>
             <p>Educação é <strong>setor preferencial</strong> da tese. GenAI é aposta institucional desde 2023. E a camada de avaliação é a <strong>linha de pesquisa da casa</strong> (AIED 2024).</p>
           </div>
-          <p class="cap" style="margin-top:1rem;">Fonte — <span class="em">Press Hotmart (2026); tese pública de investimento do CESAR.</span></p>
+          <p class="cap" style="margin-top:1rem;">Fonte: <span class="em">Press Hotmart (2026); tese pública de investimento do CESAR.</span></p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- 8 — 07 O caminho -->
+  <!-- 8 - 07 O caminho -->
   <section class="slide s-07">
     <div class="rail">
-      <div class="eyebrow"><span class="tick">07</span> O caminho</div>
+      <div class="eyebrow"><span class="tick">08</span> O caminho</div>
       <div class="counter"></div>
     </div>
     <div class="body">
-      <h2 class="serif-l">Construir juntos — e cedo.</h2>
+      <h2 class="serif-l">Construir juntos, e cedo.</h2>
       <div class="pathgrid">
         <div class="routes">
           <div class="route">
-            <span class="lbl">Rota 1 — Cocriação</span>
+            <span class="lbl">Rota 1: Cocriação</span>
             <p>Venture building / impulsionamento: engenharia, metodologia e rede do CESAR; a tese, o domínio e o campo de prova nossos.</p>
           </div>
           <div class="route">
-            <span class="lbl">Rota 2 — Pesquisa aplicada</span>
-            <p>Parceria com a CESAR School sobre <strong>avaliação de conteúdo gerado por LLM</strong> — usando nossos produtos como dataset real.</p>
+            <span class="lbl">Rota 2: Pesquisa aplicada</span>
+            <p>Parceria com a CESAR School sobre <strong>avaliação de conteúdo gerado por LLM</strong>, usando nossos produtos como dataset real.</p>
           </div>
         </div>
         <div class="connector" aria-hidden="true">
@@ -534,14 +567,14 @@
           </svg>
         </div>
         <div class="terminal">
-          <span class="lbl">Próximo passo — não é aporte</span>
-          <p>Uma reunião técnica com a School, e enquadrar o piloto como projeto conjunto. <em>“Sai de qualquer jeito; com vocês, sai melhor, mais rápido — e daqui, de Recife.”</em></p>
+          <span class="lbl">Próximo passo: não é aporte</span>
+          <p>Uma reunião técnica com a School, e enquadrar o piloto como projeto conjunto. <em>“Sai de qualquer jeito; com vocês, sai melhor, mais rápido, e daqui, de Recife.”</em></p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- 9 — Encerramento (manifesto) -->
+  <!-- 9 - Encerramento (manifesto) -->
   <section class="slide s-close">
     <div class="rail">
       <div class="eyebrow"><span class="tick">■</span> Argumento-assinatura</div>
@@ -549,8 +582,8 @@
     </div>
     <div class="body">
       <span class="ghost" style="right:0; bottom:-6vh; font-size:40vh;">”</span>
-      <p class="quote-q">Toda plataforma coloca IA para o criador produzir mais rápido. Ninguém coloca IA para o aluno <em>aprender melhor</em> — porque isso exige encarar o problema que ninguém quer: <em>medir se o que a IA gerou se sustenta.</em></p>
-      <p class="quote-attr">Essa é a nossa aposta técnica central — e é o vão que queremos ocupar, daqui, de Recife.</p>
+      <p class="quote-q">Toda plataforma coloca IA para o criador produzir mais rápido. Ninguém coloca IA para o aluno <em>aprender melhor</em>, porque isso exige encarar o problema que ninguém quer: <em>medir se o que a IA gerou se sustenta.</em></p>
+      <p class="quote-attr">Essa é a nossa aposta técnica central, e é o vão que queremos ocupar, daqui, de Recife.</p>
       <p class="quote-sign">Guta Britto Alves · Ricardo Neves Junior</p>
     </div>
   </section>
